@@ -9,45 +9,43 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isNight = false
-    
-    
+    @State private var temperature: Int = 0
+    @State private var weatherIcon: String = "cloud.sun.fill"
+    @State private var cityName: String = "Kochi, Kerala"
+    private let weatherManager = WeatherManager()
+
     var body: some View {
         ZStack {
             BackgroundView(isNight: isNight)
             VStack {
-                CityTextView(cityName: "Kochi, Kerala")
-                MainWeatherStatusView(imageName: isNight ?  "moon.stars.fill": "cloud.sun.fill", temperature: 88)
-               
-                HStack (spacing: 20){
-                    WeatherDayView(dayOfWeek: "MON",
-                                   imageName: "cloud.sun.fill",
-                                   temperature: 74)
-                    WeatherDayView(dayOfWeek: "TUE",
-                                   imageName: "sun.max.fill",
-                                   temperature: 88)
-                    WeatherDayView(dayOfWeek: "WED",
-                                   imageName: "wind.snow",
-                                   temperature: 55)
-                    WeatherDayView(dayOfWeek: "THU",
-                                   imageName: "sunset.fill",
-                                   temperature: 60)
-                    WeatherDayView(dayOfWeek: "FRI",
-                                   imageName: "snow",
-                                   temperature: 25)
-                    
+                CityTextView(cityName: cityName)
+                MainWeatherStatusView(imageName: weatherIcon, temperature: temperature)
+
+                HStack(spacing: 20) {
+                    WeatherDayView(dayOfWeek: "MON", imageName: "cloud.sun.fill", temperature: 74)
+                    WeatherDayView(dayOfWeek: "TUE", imageName: "sun.max.fill", temperature: 88)
+                    WeatherDayView(dayOfWeek: "WED", imageName: "wind.snow", temperature: 55)
+                    WeatherDayView(dayOfWeek: "THU", imageName: "sunset.fill", temperature: 60)
+                    WeatherDayView(dayOfWeek: "FRI", imageName: "snow", temperature: 25)
                 }
                 Spacer()
-                Button{
+                Button {
                     isNight.toggle()
                 } label: {
                     WeatherButton(title: "Change Day Time", textColor: .blue, backgroundColor: .white)
                 }
                 Spacer()
             }
-            
         }
-        
-       
+        .on {
+            weatherManager.fetchWeather { weatherResponse in
+                print(weatherResponse)
+                if let weatherResponse = weatherResponse {
+                    self.temperature = Int(weatherResponse.main.temp)
+                    self.weatherIcon =  mapWeatherIcon(iconCode: weatherResponse.weather.first?.icon ?? "sun.fill")
+                }
+            }
+        }
     }
 }
 
@@ -121,6 +119,36 @@ struct MainWeatherStatusView: View {
             
         }
         .padding(.bottom, 40)
+    }
+}
+func mapWeatherIcon(iconCode: String) -> String {
+    switch iconCode {
+    case "01d": // Clear sky (day)
+        return "sun.max.fill"
+    case "01n": // Clear sky (night)
+        return "moon.stars.fill"
+    case "02d": // Few clouds (day)
+        return "cloud.sun.fill"
+    case "02n": // Few clouds (night)
+        return "cloud.moon.fill"
+    case "03d", "03n": // Scattered clouds (day/night)
+        return "cloud.fill"
+    case "04d", "04n": // Broken clouds (day/night)
+        return "smoke.fill"
+    case "09d", "09n": // Shower rain (day/night)
+        return "cloud.drizzle.fill"
+    case "10d": // Rain (day)
+        return "cloud.sun.rain.fill"
+    case "10n": // Rain (night)
+        return "cloud.moon.rain.fill"
+    case "11d", "11n": // Thunderstorm (day/night)
+        return "cloud.bolt.fill"
+    case "13d", "13n": // Snow (day/night)
+        return "snow"
+    case "50d", "50n": // Mist (day/night)
+        return "cloud.fog.fill"
+    default: // Default icon
+        return "cloud.sun.fill"
     }
 }
 
