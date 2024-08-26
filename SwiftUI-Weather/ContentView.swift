@@ -37,7 +37,7 @@ struct ContentView: View {
                 Spacer()
             }
         }
-        .on {
+        .onAppear() {
             weatherManager.fetchWeather { weatherResponse in
                 print(weatherResponse)
                 if let weatherResponse = weatherResponse {
