@@ -16,24 +16,24 @@ struct ContentView: View {
             BackgroundView(isNight: isNight)
             VStack {
                 CityTextView(cityName: "Kochi, Kerala")
-                MainWeatherStatusView(imageName: isNight ?  "moon.stars.fill": "cloud.sun.fill", temperature: 88)
+                MainWeatherStatusView(imageName: isNight ?  "moon.stars.fill": "cloud.sun.fill", temperature: 33)
                
                 HStack (spacing: 20){
                     WeatherDayView(dayOfWeek: "MON",
                                    imageName: "cloud.sun.fill",
-                                   temperature: 74)
+                                   temperature: 30)
                     WeatherDayView(dayOfWeek: "TUE",
                                    imageName: "sun.max.fill",
-                                   temperature: 88)
+                                   temperature: 32)
                     WeatherDayView(dayOfWeek: "WED",
-                                   imageName: "wind.snow",
-                                   temperature: 55)
+                                   imageName: "cloud.fill",
+                                   temperature: 27)
                     WeatherDayView(dayOfWeek: "THU",
-                                   imageName: "sunset.fill",
-                                   temperature: 60)
-                    WeatherDayView(dayOfWeek: "FRI",
-                                   imageName: "snow",
+                                   imageName: "cloud.drizzle.fill",
                                    temperature: 25)
+                    WeatherDayView(dayOfWeek: "FRI",
+                                   imageName: "cloud.bolt.fill",
+                                   temperature: 23)
                     
                 }
                 Spacer()
@@ -84,7 +84,7 @@ struct BackgroundView: View {
     var isNight: Bool
     
     var body: some View {
-        LinearGradient(gradient:Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue")]),
+        LinearGradient(gradient:Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : .lightBlue]),
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
         .ignoresSafeArea()
