@@ -39,7 +39,6 @@ struct ContentView: View {
         }
         .onAppear() {
             weatherManager.fetchWeather { weatherResponse in
-                print(weatherResponse)
                 if let weatherResponse = weatherResponse {
                     self.temperature = Int(weatherResponse.main.temp)
                     self.weatherIcon =  mapWeatherIcon(iconCode: weatherResponse.weather.first?.icon ?? "sun.fill")
