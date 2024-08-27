@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Entry Point of the app
 @main
 struct SwiftUI_WeatherApp: App {
     var body: some Scene {
